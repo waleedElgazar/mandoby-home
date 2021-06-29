@@ -3,17 +3,18 @@ package main
 import (
 	"demo/functions"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	
 	router := mux.NewRouter()
 	router.HandleFunc("/add", functions.InsertPost).Methods("POST")
-	router.HandleFunc("/posts/{kind}", functions.GetPost).Methods("GET")
-	router.HandleFunc("/posts", functions.GetPosts).Methods("GET")
-	http.ListenAndServe(":"+port, router)
+	router.HandleFunc("/getPost", functions.GetPostWithKind).Methods("GET")
+	router.HandleFunc("/getPosts", functions.GetAllPosts).Methods("GET")
+	router.HandleFunc("/getPostsForUser", functions.GetPostForUser).Methods("GET")
+	router.HandleFunc("/getPostsWithPhone", functions.GetPostPhone).Methods("GET")
+	router.HandleFunc("/updatePost", functions.UpdatePost).Methods("PUT")
+	router.HandleFunc("/deletePost", functions.DeletePost).Methods("DELETE")
+	http.ListenAndServe(":8081", router)
 }
