@@ -9,6 +9,7 @@ import (
 
 func main() {
 	router := mux.NewRouter()
+	port := functions.GetPort()
 	router.HandleFunc("/add", functions.InsertPost).Methods("POST")
 	router.HandleFunc("/getPost", functions.GetPostWithKind).Methods("GET")
 	router.HandleFunc("/getPosts", functions.GetAllPosts).Methods("GET")
@@ -16,5 +17,5 @@ func main() {
 	router.HandleFunc("/getPostsWithPhone", functions.GetPostPhone).Methods("GET")
 	router.HandleFunc("/updatePost", functions.UpdatePost).Methods("PUT")
 	router.HandleFunc("/deletePost", functions.DeletePost).Methods("DELETE")
-	http.ListenAndServe(":8081", router)
+	http.ListenAndServe(":"+port, router)
 }

@@ -64,7 +64,7 @@ func GetPostWithPhoneDB(phone string) ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	fmt.Println(phone, "|db")
+	//fmt.Println(phone, "|db")
 	query := "SELECT id ,phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post WHERE productiontype = ?"
 	result, err := dbb.Query(query, phone)
 	if err != nil {
@@ -204,4 +204,10 @@ func UpdatePostDB(id int, post db.Post) bool {
 		panic(err.Error())
 	}
 	return true
+}
+
+func GetPort() string {
+	db := db.DBConn()
+	defer db.Close()
+	return os.Getenv("PORT")
 }
