@@ -203,3 +203,7 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func Welcome(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w,"welcome")
+}

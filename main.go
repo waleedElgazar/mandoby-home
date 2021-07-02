@@ -10,6 +10,7 @@ import (
 func main() {
 	router := mux.NewRouter()
 	port := functions.GetPort()
+	router.HandleFunc("/", functions.Welcome)
 	router.HandleFunc("/add", functions.InsertPost).Methods("POST")
 	router.HandleFunc("/getPost", functions.GetPostWithKind).Methods("GET")
 	router.HandleFunc("/getPosts", functions.GetAllPosts).Methods("GET")
