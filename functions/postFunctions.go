@@ -203,9 +203,3 @@ func UpdatePostDB(id int, post db.Post) bool {
 	}
 	return true
 }
-
-func GetPort() string {
-	db := db.DBConn()
-	defer db.Close()
-	return os.Getenv("PORT")
-}
