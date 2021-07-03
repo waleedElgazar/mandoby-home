@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 //done
@@ -40,16 +42,9 @@ func InsertPost(w http.ResponseWriter, r *http.Request) {
 
 //done
 func GetPostWithKind(w http.ResponseWriter, r *http.Request) {
-	var post db.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is error happened\n try again"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	kind := post.ProductType
-	posts, founded := GetPostDB(kind)
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	posts, founded := GetPostDB(params["productType"])
 	if founded {
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte("founded posts like that "))
@@ -67,16 +62,9 @@ func GetPostWithKind(w http.ResponseWriter, r *http.Request) {
 
 //done
 func GetPostPhone(w http.ResponseWriter, r *http.Request) {
-	var post db.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is error happened\n try again"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	phone := post.Phone
-	fmt.Println(phone, "fd")
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	phone := params["phone"]
 	posts, founded := GetPostWithPhoneDB(phone)
 	if founded {
 		w.Header().Set("Content-Type", "text/plain")
@@ -95,16 +83,9 @@ func GetPostPhone(w http.ResponseWriter, r *http.Request) {
 
 //done
 func GetPostForUser(w http.ResponseWriter, r *http.Request) {
-	var post db.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is error happened\n try again"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	userType := post.UserType
-	fmt.Println(userType, "fd")
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	userType := params["userType"]
 	posts, founded := GetPostForUSerDB(userType)
 	if founded {
 		w.Header().Set("Content-Type", "text/plain")
@@ -205,5 +186,5 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w,"welcome")
+	fmt.Fprintln(w, "welcome")
 }

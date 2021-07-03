@@ -64,8 +64,7 @@ func GetPostWithPhoneDB(phone string) ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	//fmt.Println(phone, "|db")
-	query := "SELECT id ,phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post WHERE productiontype = ?"
+	query := "SELECT id ,phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post WHERE phone = ?"
 	result, err := dbb.Query(query, phone)
 	if err != nil {
 		fmt.Println("error ", err.Error())
@@ -101,7 +100,6 @@ func GetPostForUSerDB(userType string) ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	fmt.Println(userType, "|db")
 	query := "SELECT id ,phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post WHERE usertype = ?"
 	result, err := dbb.Query(query, userType)
 	if err != nil {
