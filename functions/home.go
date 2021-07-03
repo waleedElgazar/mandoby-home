@@ -104,14 +104,6 @@ func GetPostForUser(w http.ResponseWriter, r *http.Request) {
 
 //done
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
-	var post db.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is error happened\n try again"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 	posts, founded := GetPostsDB()
 	if founded {
 		w.Header().Set("Content-Type", "text/plain")
@@ -160,16 +152,9 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 
 //done
 func DeletePost(w http.ResponseWriter, r *http.Request) {
-	var post db.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		fmt.Println(err.Error() + " ")
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is error happened\n try again"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	id := post.PostID
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	id := params["id"]
 	fmt.Println("from url ", id)
 	deleted := DeletePostDb(id)
 	if deleted {

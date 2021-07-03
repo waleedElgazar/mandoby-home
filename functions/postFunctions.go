@@ -167,7 +167,7 @@ func GetPostsDB() ([]db.Post, bool) {
 }
 
 //done
-func DeletePostDb(id int) bool {
+func DeletePostDb(id string) bool {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")

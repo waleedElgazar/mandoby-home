@@ -26,6 +26,6 @@ func main() {
 	router.HandleFunc("/getPostsForUser/{userType}", functions.GetPostForUser).Methods("GET")
 	router.HandleFunc("/getPostsWithPhone/{phone}", functions.GetPostPhone).Methods("GET")
 	router.HandleFunc("/updatePost", functions.UpdatePost).Methods("PUT")
-	router.HandleFunc("/deletePost", functions.DeletePost).Methods("DELETE")
+	router.HandleFunc("/deletePost/{id}", functions.DeletePost).Methods("DELETE")
 	http.ListenAndServe(":"+port, router)
 }
