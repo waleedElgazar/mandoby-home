@@ -13,9 +13,9 @@ func InsertPostDB(post db.Post) bool {
 	defer db.Close()
 
 	db_name := os.Getenv("DB_NAME")
-	in := "INSERT INTO " + db_name + ".post set phone =?, name =?,productiontype =? ,amount =?, government =?, usertype =?, area =?, date =?"
+	in := "INSERT INTO " + db_name + ".post set phone =?, name =?,productiontype =?,productionName=? ,amount =?, imageUrl=?, government =?, usertype =?, area =?, date =?"
 	insert, err := db.Prepare(in)
-	insert.Exec(post.Phone, post.Name, post.ProductType, post.Amount, post.Government, post.UserType, post.Area, post.Date)
+	insert.Exec(post.Phone, post.Name, post.ProductType, post.ProductName, post.Amount, post.ImageUrl, post.Government, post.UserType, post.Area, post.Date)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -28,17 +28,17 @@ func GetPostDB(typeProduction string) ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	query := "SELECT id, phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post WHERE productiontype = ?"
+	query := "SELECT id, phone, name, productiontype,productionName , amount,imageUrl, government, usertype , area, date FROM " + db_name + ".post WHERE productiontype = ?"
 	result, err := dbb.Query(query, typeProduction)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 
 	}
 	var id int
-	var userPhone, name, productiontype, amount, government, usertype, area, date string
+	var userPhone, name, productiontype, amount, productionName, url, government, usertype, area, date string
 
 	for result.Next() {
-		err = result.Scan(&id, &userPhone, &name, &productiontype, &amount, &government, &usertype, &area, &date)
+		err = result.Scan(&id, &userPhone, &name, &productiontype, &productionName, &amount, &url, &government, &usertype, &area, &date)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -48,6 +48,7 @@ func GetPostDB(typeProduction string) ([]db.Post, bool) {
 			Name:        name,
 			ProductType: productiontype,
 			Amount:      amount,
+			ImageUrl:    url,
 			Government:  government,
 			UserType:    usertype,
 			Area:        area,
@@ -64,17 +65,17 @@ func GetPostWithPhoneDB(phone string) ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	query := "SELECT id ,phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post WHERE phone = ?"
+	query := "SELECT id ,phone, name, productiontype,productionName , amount, imageUrl,government, usertype , area, date FROM " + db_name + ".post WHERE phone = ?"
 	result, err := dbb.Query(query, phone)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 
 	}
 	var id int
-	var userPhone, name, productiontype, amount, government, usertype, area, date string
+	var userPhone, name, productiontype, productionName, amount, url, government, usertype, area, date string
 
 	for result.Next() {
-		err = result.Scan(&id, &userPhone, &name, &productiontype, &amount, &government, &usertype, &area, &date)
+		err = result.Scan(&id, &userPhone, &name, &productiontype, &productionName, &amount, &url, &government, &usertype, &area, &date)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -83,7 +84,9 @@ func GetPostWithPhoneDB(phone string) ([]db.Post, bool) {
 			Phone:       userPhone,
 			Name:        name,
 			ProductType: productiontype,
+			ProductName: productionName,
 			Amount:      amount,
+			ImageUrl:    url,
 			Government:  government,
 			UserType:    usertype,
 			Area:        area,
@@ -100,17 +103,17 @@ func GetPostForUSerDB(userType string) ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	query := "SELECT id ,phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post WHERE usertype = ?"
+	query := "SELECT id ,phone, name, productiontype,productionName , amount, imageUrl, government, usertype , area, date FROM " + db_name + ".post WHERE usertype = ?"
 	result, err := dbb.Query(query, userType)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 
 	}
 	var id int
-	var userPhone, name, productiontype, amount, government, usertype, area, date string
+	var userPhone, name, productiontype, productionName, amount, url, government, usertype, area, date string
 
 	for result.Next() {
-		err = result.Scan(&id, &userPhone, &name, &productiontype, &amount, &government, &usertype, &area, &date)
+		err = result.Scan(&id, &userPhone, &name, &productiontype, &productionName, &amount, &url, &government, &usertype, &area, &date)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -119,7 +122,9 @@ func GetPostForUSerDB(userType string) ([]db.Post, bool) {
 			Phone:       userPhone,
 			Name:        name,
 			ProductType: productiontype,
+			ProductName: productionName,
 			Amount:      amount,
+			ImageUrl:    url,
 			Government:  government,
 			UserType:    usertype,
 			Area:        area,
@@ -136,17 +141,17 @@ func GetPostsDB() ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	query := "SELECT id,phone, name, productiontype , amount, government, usertype , area, date FROM " + db_name + ".post "
+	query := "SELECT id,phone, name, productiontype ,productionName, amount, imageUrl , government, usertype , area, date FROM " + db_name + ".post "
 	result, err := dbb.Query(query)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 
 	}
 	var id int
-	var userPhone, name, productiontype, amount, government, usertype, area, date string
+	var userPhone, name, productiontype, productionName, amount, url, government, usertype, area, date string
 
 	for result.Next() {
-		err = result.Scan(&id, &userPhone, &name, &productiontype, &amount, &government, &usertype, &area, &date)
+		err = result.Scan(&id, &userPhone, &name, &productiontype, &productionName, &amount, &url, &government, &usertype, &area, &date)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -155,7 +160,9 @@ func GetPostsDB() ([]db.Post, bool) {
 			Phone:       userPhone,
 			Name:        name,
 			ProductType: productiontype,
+			ProductName: productionName,
 			Amount:      amount,
+			ImageUrl:    url,
 			Government:  government,
 			UserType:    usertype,
 			Area:        area,
@@ -171,7 +178,6 @@ func DeletePostDb(id string) bool {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	fmt.Println("from db", id)
 	delete, err := dbb.Prepare("DELETE FROM " + db_name + ".post WHERE id =?")
 	if err != nil {
 		fmt.Println("err", err.Error())
@@ -192,12 +198,12 @@ func UpdatePostDB(id int, post db.Post) bool {
 	db := db.DBConn()
 	defer db.Close()
 	db_name := os.Getenv("DB_NAME")
-	query := "UPDATE " + db_name + ".post set phone =?, name =?,productiontype =? ,amount =?, government =?, usertype =?, area =?, date =? WHERE id =?"
+	query := "UPDATE " + db_name + ".post set phone =?, name =?,productiontype =?,productionName=? ,amount =?, imageUrl=? , government =?, usertype =?, area =?, date =? WHERE id =?"
 	update, err := db.Prepare(query)
 	if err != nil {
 		panic(err.Error())
 	}
-	_, err = update.Exec(post.Phone, post.Name, post.ProductType, post.Amount, post.Government, post.UserType, post.Area, post.Date, id)
+	_, err = update.Exec(post.Phone, post.Name, post.ProductType, post.ProductName, post.Amount, post.ImageUrl, post.Government, post.UserType, post.Area, post.Date, id)
 	if err != nil {
 		panic(err.Error())
 	}

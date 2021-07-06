@@ -15,9 +15,6 @@ func InsertPost(w http.ResponseWriter, r *http.Request) {
 	var creds db.Post
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("failed"))
-		w.Write([]byte(err.Error()))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	} else {
@@ -26,15 +23,15 @@ func InsertPost(w http.ResponseWriter, r *http.Request) {
 			Phone:       creds.Phone,
 			Name:        creds.Name,
 			ProductType: creds.ProductType,
+			ProductName: creds.ProductName,
 			Amount:      creds.Amount,
+			ImageUrl:    creds.ImageUrl,
 			Government:  creds.Government,
 			UserType:    creds.UserType,
 			Area:        creds.Area,
-			Date:        currentTime.Format("2020.01.02 15:04:05"),
+			Date:        currentTime.Format("2006.01.02 15:04:05"),
 		}
 		InsertPostDB(post)
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("added succ"))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
@@ -46,15 +43,11 @@ func GetPostWithKind(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	posts, founded := GetPostDB(params["productType"])
 	if founded {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("founded posts like that "))
 		json.NewEncoder(w).Encode(&posts)
 		w.WriteHeader(http.StatusAccepted)
 		return
 	} else {
 		json.NewEncoder(w).Encode(&posts)
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is no posts with that type"))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
@@ -67,15 +60,11 @@ func GetPostPhone(w http.ResponseWriter, r *http.Request) {
 	phone := params["phone"]
 	posts, founded := GetPostWithPhoneDB(phone)
 	if founded {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("founded posts like that "))
 		json.NewEncoder(w).Encode(&posts)
 		w.WriteHeader(http.StatusAccepted)
 		return
 	} else {
 		json.NewEncoder(w).Encode(&posts)
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is no posts with that type"))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
@@ -88,15 +77,11 @@ func GetPostForUser(w http.ResponseWriter, r *http.Request) {
 	userType := params["userType"]
 	posts, founded := GetPostForUSerDB(userType)
 	if founded {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("founded posts like that "))
 		json.NewEncoder(w).Encode(&posts)
 		w.WriteHeader(http.StatusAccepted)
 		return
 	} else {
 		json.NewEncoder(w).Encode(&posts)
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is no posts with that type"))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
@@ -106,15 +91,11 @@ func GetPostForUser(w http.ResponseWriter, r *http.Request) {
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	posts, founded := GetPostsDB()
 	if founded {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("founded posts like that "))
 		json.NewEncoder(w).Encode(&posts)
 		w.WriteHeader(http.StatusAccepted)
 		return
 	} else {
 		json.NewEncoder(w).Encode(&posts)
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is no posts with that type"))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
@@ -125,9 +106,6 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	var creds db.Post
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("failed"))
-		w.Write([]byte(err.Error()))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	} else {
@@ -136,15 +114,15 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 			Phone:       creds.Phone,
 			Name:        creds.Name,
 			ProductType: creds.ProductType,
+			ProductName: creds.ProductName,
 			Amount:      creds.Amount,
+			ImageUrl:    creds.ImageUrl,
 			Government:  creds.Government,
 			UserType:    creds.UserType,
 			Area:        creds.Area,
 			Date:        currentTime.Format("2020.01.02 15:04:05"),
 		}
 		UpdatePostDB(creds.PostID, post)
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("updated succ"))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
@@ -155,16 +133,8 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	id := params["id"]
-	fmt.Println("from url ", id)
 	deleted := DeletePostDb(id)
 	if deleted {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("deleted successfuly "))
-		w.WriteHeader(http.StatusAccepted)
-		return
-	} else {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("there is something happen"))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
