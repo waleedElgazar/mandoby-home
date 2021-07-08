@@ -4,9 +4,11 @@ import (
 	"demo/db"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
 
@@ -138,6 +140,56 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
+}
+
+func ContactUSER(w http.ResponseWriter, r *http.Request) {
+	parm := mux.Vars(r)
+	phone := parm["phone"]
+	tocall:=parm["toCall"]
+	validToken, err := GenerateJWT(phone)
+	if err != nil {
+		fmt.Println("failed to generate token ", err.Error())
+	}
+	client := &http.Client{}
+
+	fmt.Fprintln(w,validToken)
+	url := "http://localhost:8083/isAuthorized/"+tocall
+	
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Println("error 1", err.Error())
+	}
+	req.Header.Set("Token", validToken)
+	
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println("error 1", err.Error())
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println("error ",err)
+	}
+	fmt.Println(string(body))
+
+}
+
+var mySigningKey = []byte("mandopy-project")
+
+func GenerateJWT(phone string) (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+	claims["authorized"] = true
+	claims["phone"] = phone
+	claims["exp"] = time.Now().Add(time.Minute * 5).Unix()
+	tokenString, err := token.SignedString(mySigningKey)
+
+	if err != nil {
+		fmt.Println("Something Went Wrong: ", err.Error())
+		return "", err
+	}
+
+	return tokenString, nil
 }
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
