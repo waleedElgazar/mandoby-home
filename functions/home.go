@@ -153,11 +153,11 @@ func ContactUSER(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 
 	fmt.Fprintln(w,validToken)
-	url := "http://localhost:8083/isAuthorized/"+tocall
+	url := "https://gp-mandoob-users.herokuapp.com/isAuthorized/"+tocall
 	
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		fmt.Println("error 1", err.Error())
+		fmt.Println("error ", err.Error())
 	}
 	req.Header.Set("Token", validToken)
 	
@@ -165,11 +165,10 @@ func ContactUSER(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("error 1", err.Error())
 	}
-	body, err := ioutil.ReadAll(res.Body)
+	_, err = ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("error ",err)
 	}
-	fmt.Println(string(body))
 
 }
 
