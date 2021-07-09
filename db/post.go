@@ -10,7 +10,8 @@ type Post struct {
 	Name        string `json:"name"`
 	ProductType string `json:"productType"`
 	ProductName string `json:"productName"`
-	Amount      string `json:"amount"`
+	Amount      int    `json:"amount"`
+	Unit		string `json:"unit"`
 	ImageUrl    string `json:"imageUrl"`
 	Government  string `json:"government"`
 	UserType    string `json:"userType"`

@@ -27,6 +27,7 @@ func InsertPost(w http.ResponseWriter, r *http.Request) {
 			ProductType: creds.ProductType,
 			ProductName: creds.ProductName,
 			Amount:      creds.Amount,
+			Unit: 		 creds.Unit,
 			ImageUrl:    creds.ImageUrl,
 			Government:  creds.Government,
 			UserType:    creds.UserType,
@@ -70,6 +71,17 @@ func GetPostPhone(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
+}
+
+//done
+func Search(w http.ResponseWriter, r *http.Request) {
+	param := mux.Vars(r)
+	text := param["text"]
+	json.NewEncoder(w).Encode(GetPostsWithSearch(text))
+}
+
+func GetReport(w http.ResponseWriter, r *http.Request ){
+	json.NewEncoder(w).Encode(CreateReport())
 }
 
 //done
@@ -145,30 +157,35 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 func ContactUSER(w http.ResponseWriter, r *http.Request) {
 	parm := mux.Vars(r)
 	phone := parm["phone"]
-	tocall:=parm["toCall"]
+	tocall := parm["toCall"]
 	validToken, err := GenerateJWT(phone)
 	if err != nil {
 		fmt.Println("failed to generate token ", err.Error())
 	}
 	client := &http.Client{}
 
-	fmt.Fprintln(w,validToken)
-	url := "https://gp-mandoob-users.herokuapp.com/isAuthorized/"+tocall
-	
+	url := "https://gp-mandoob-users.herokuapp.com/isAuthorized/" + tocall
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
 	req.Header.Set("Token", validToken)
-	
+
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println("error 1", err.Error())
+		fmt.Println("error ", err.Error())
 	}
-	_, err = ioutil.ReadAll(res.Body)
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println("error ",err)
+		fmt.Println("error ", err)
 	}
+	var user db.User
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		fmt.Println("error", err.Error())
+	}
+	json.NewEncoder(w).Encode(user)
 
 }
 

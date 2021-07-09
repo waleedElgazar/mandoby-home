@@ -23,6 +23,8 @@ func main() {
 	router.HandleFunc("/", functions.Welcome)
 	router.HandleFunc("/add", functions.InsertPost).Methods("POST")
 	router.HandleFunc("/getPost/{productType}", functions.GetPostWithKind).Methods("GET")
+	router.HandleFunc("/search/{text}", functions.Search).Methods("GET")
+	router.HandleFunc("/report", functions.GetReport).Methods("GET")
 	router.HandleFunc("/getPosts", functions.GetAllPosts).Methods("GET")
 	router.HandleFunc("/getPostsForUser/{userType}", functions.GetPostForUser).Methods("GET")
 	router.HandleFunc("/contactUser/{phone}/{toCall}", functions.ContactUSER).Methods("POST")
