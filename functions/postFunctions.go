@@ -13,7 +13,7 @@ func InsertPostDB(post db.Post) bool {
 	defer db.Close()
 	fmt.Println("11")
 	db_name := os.Getenv("DB_NAME")
-	in := "INSERT INTO " + db_name + ".post set phone =?, name =?,productiontype =?,productionName=? ,amount =?,unit=? ,imageUrl=?, government =?, usertype =?, area =?, date =?"
+	in := "INSERT INTO " + db_name + ".post set phone =?, name =?, productiontype =?, productionName=? ,amount =?,unit=? ,imageUrl=?, government =?, usertype =?, area =?, date =?"
 	insert, err := db.Prepare(in)
 	insert.Exec(post.Phone, post.Name, post.ProductType, post.ProductName, post.Amount, post.Unit, post.ImageUrl, post.Government, post.UserType, post.Area, post.Date)
 	if err != nil {
@@ -29,7 +29,7 @@ func GetPostDB(typeProduction string) ([]db.Post, bool) {
 	dbb := db.DBConn()
 	defer dbb.Close()
 	db_name := os.Getenv("DB_NAME")
-	query := "SELECT id, phone, name, productiontype,productionName , amount,unit ,imageUrl, government, usertype , area, date FROM " + db_name + ".post WHERE productiontype = ?"
+	query := "SELECT id, phone, name, productiontype, productionName , amount,unit ,imageUrl, government, usertype , area, date FROM " + db_name + ".post WHERE productiontype = ?"
 	result, err := dbb.Query(query, typeProduction)
 	if err != nil {
 		fmt.Println("error ", err.Error())
@@ -86,6 +86,7 @@ func GetPostWithPhoneDB(phone string) ([]db.Post, bool) {
 			Phone:       userPhone,
 			Name:        name,
 			ProductType: productiontype,
+			ProductName: productionName,
 			Amount:      amount,
 			Unit:        unit,
 			ImageUrl:    url,
@@ -124,6 +125,7 @@ func GetPostForUSerDB(userType string) ([]db.Post, bool) {
 			Phone:       userPhone,
 			Name:        name,
 			ProductType: productiontype,
+			ProductName: productionName,
 			Amount:      amount,
 			Unit:        unit,
 			ImageUrl:    url,
@@ -162,6 +164,7 @@ func GetPostsDB() ([]db.Post, bool) {
 			Phone:       userPhone,
 			Name:        name,
 			ProductType: productiontype,
+			ProductName: productionName,
 			Amount:      amount,
 			Unit:        unit,
 			ImageUrl:    url,
